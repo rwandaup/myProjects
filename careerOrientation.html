@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Orientation Quiz</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div id="dv1">
+    <h1>Career Orientation Quiz</h1>
+
+    <form id="quizForm" action="save_answer.php" method="post">
+        <div id="questionContainer"></div> &emsp;
+        <div id="navigationButtons">
+            <button type="button" id="prevButton" onclick="navigate('previous')">Previ</button> &emsp;
+            <button type="button" id="nextButton" onclick="navigate('next')">Next</button> 
+            <button type="submit" id="completeButton" style="display:none;">Complete</button>
+        </div> &emsp;
+        <div id="progressIndicator">Question <span id="questionNumber"></span> of <span id="totalQuestions"></span></div>
+    </form>
+    </div>
+    <script>
+        const questions = [
+            {
+                question: "I like to work on cars",
+                name: "realistic1"
+            },
+            {
+                question: "I like to build things",
+                name: "realistic2"
+            },
+            {
+                question: "I like to take care of animals",
+                name: "realistic3"
+            },
+            {
+                question: "I like putting things together or assembling things",
+                name: "realistic4"
+            },
+            {
+                question: "I like to cook",
+                name: "realistic5"
+            },
+            {
+                question: "I am a practical person",
+                name: "realistic6"
+            },
+            {
+                question: "I like working outdoors",
+                name: "realistic7"
+            },
+            {
+                question: "I like to do puzzles",
+                name: "investigative1"
+            },
+            {
+                question: "I like to do experiments",
+                name: "investigative2"
+            },
+            {
+                question: "I enjoy science",
+                name: "investigative3"
+            },
+            {
+                question: "I enjoy trying to figure out how things work",
+                name: "investigative4"
+            },
+            {
+                question: "I like to analyze things (problems/ situations)",
+                name: "investigative5"
+            },
+            {
+                question: "I like working with numbers or charts",
+                name: "investigative6"
+            },
+            {
+                question: "I’m good at math",
+                name: "investigative7"
+            },
+            {
+                question: "I am good at working independently",
+                name: "artistic1"
+            },
+            {
+                question: "I like to read about art and music",
+                name: "artistic2"
+            },
+            {
+                question: "I like to draw",
+                name: "artistic3"
+            },
+            {
+                question: "I enjoy creative writing",
+                name: "artistic4"
+            },
+            {
+                question: "I am a creative person",
+                name: "artistic5"
+            },
+            {
+                question: "I like to play instruments or sing",
+                name: "artistic6"
+            },
+            {
+                question: "I like acting in plays",
+                name: "artistic7"
+            },
+            {
+                question: "I like to work in teams",
+                name: "social1"
+            },
+            {
+                question: "I like to teach or train people",
+                name: "social2"
+            },
+            {
+                question: "I like trying to help people solve their problems",
+                name: "social3"
+            },
+            {
+                question: "I am interested in healing people",
+                name: "social4"
+            },
+            {
+                question: "I enjoy learning about other cultures",
+                name: "social5"
+            },
+            {
+                question: "I like to get into discussions about issues",
+                name: "social6"
+            },
+            {
+                question: "I like helping people",
+                name: "social7"
+            },
+            {
+                question: "I am an ambitious person, I set goals for myself",
+                name: "enterprising1"
+            },
+            {
+                question: "I like to give speeches",
+                name: "enterprising2"
+            },
+            {
+                question: "I like to try to influence or persuade people",
+                name: "enterprising3"
+            },
+            {
+                question: "I like selling things",
+                name: "enterprising4"
+            },
+            {
+                question: "I am quick to take on new responsibilities",
+                name: "enterprising5"
+            },
+            {
+                question: "I would like to start my own business",
+                name: "enterprising6"
+            },
+            {
+                question: "I like to lead",
+                name: "enterprising7"
+            },
+            {
+                question: "I like to organize things, (files, desks/offices)",
+                name: "conventional1"
+            },
+            {
+                question: "I like to have clear instructions to follow",
+                name: "conventional2"
+            },
+            {
+                question: "I wouldn’t mind working 8 hours per day in an office",
+                name: "conventional3"
+            },
+            {
+                question: "I pay attention to details",
+                name: "conventional4"
+            },
+            {
+                question: "I like to do filing or typing",
+                name: "conventional5"
+            },
+            {
+                question: "I am good at keeping records of my work",
+                name: "conventional6"
+            },
+            {
+                question: "I would like to work in an office",
+                name: "conventional7"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            displayQuestion(currentQuestionIndex);
+            updateProgress();
+        });
+
+        function displayQuestion(index) {
+            const questionContainer = document.getElementById("questionContainer");
+            questionContainer.innerHTML = `
+                <p>${questions[index].question}</p>
+                <label>
+                    <input type="radio" name="${questions[index].name}" value="1" required> True
+                </label>
+                <label>
+                    <input type="radio" name="${questions[index].name}" value="0" required> False
+                </label>
+            `;
+            updateNavigationButtons();
+        }
+
+        function updateNavigationButtons() {
+            document.getElementById("prevButton").disabled = currentQuestionIndex === 0;
+            document.getElementById("nextButton").disabled = currentQuestionIndex === questions.length - 1;
+        }
+
+        function navigate(direction) {
+            if (direction === 'next' && currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+            } else if (direction === 'previous' && currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+            }
+            displayQuestion(currentQuestionIndex);
+            updateProgress();
+        }
+
+        function updateProgress() {
+            document.getElementById("questionNumber").innerText = currentQuestionIndex + 1;
+            document.getElementById("totalQuestions").innerText = questions.length;
+        }
+    </script>
+</body>
+</html
